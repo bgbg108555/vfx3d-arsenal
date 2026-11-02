@@ -1,0 +1,24 @@
+name: New 3D VFX Preset / Shader / Feature Request
+description: Propose a new 3D combat/spell VFX preset, procedural BMesh prop, GLSL shader, or engine bridge
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      options:
+        - New 3D VFX Skill Preset
+        - Custom GLSL Shader / Particle Physics
+        - Procedural 3D BMesh Prop (Three.js + Blender)
+        - Engine Export Bridge (Blender / UE5 Niagara / Unity / Godot / Houdini)
+        - UI / Localization / Accessibility
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Visual / Technical Description
+      description: Describe the motion timing (Chant/Windup -> Release -> Impact -> Linger), shaders, or export workflow you have in mind.
+    validations:
+      required: true

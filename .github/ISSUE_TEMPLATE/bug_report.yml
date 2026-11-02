@@ -1,0 +1,42 @@
+name: Bug Report
+description: Report a shader glitch, timeline timing issue, WebGL error, or .glb/.obj export bug
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report! Including the preset ID (e.g., `chant_seraph_judgment_ray`) helps reproduce VFX issues immediately.
+  - type: input
+    id: preset
+    attributes:
+      label: Affected Preset ID / Component
+      description: Preset ID or module (e.g., `sum_inferno_dragon_king`, `vfx_exporter3d.js`, `Blender BMesh generator`)
+      placeholder: chant_seraph_judgment_ray
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: Exact steps, URL parameters, or CLI command to reproduce the issue.
+      placeholder: |
+        1. Open https://bgbg108555.github.io/vfx3d-arsenal/?select=...
+        2. Switch Quality Tier to T4...
+        3. Click Export 3D Pack...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs. Actual Behavior
+      description: What did you expect to see vs. what happened? Include any browser console or CLI logs.
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Browser / GPU / Engine Environment
+      placeholder: Chrome 131 / Windows 11 / RTX 4070 / Blender 4.2
+    validations:
+      required: false

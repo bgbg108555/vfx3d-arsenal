@@ -1,0 +1,48 @@
+{
+  "name": "vfx3d-arsenal",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Open-Source True-3D WebGL Game VFX Arsenal (398 Presets, Global Caster Chanting, Healing/Party Support, 66 WebP Textures, 24 BMesh/Blender 3D Props & Universal .GLB/.ZIP VFX Export Pipeline)",
+  "homepage": "https://bgbg108555.github.io/vfx3d-arsenal/",
+  "type": "module",
+  "keywords": [
+    "threejs",
+    "webgl",
+    "vfx",
+    "particles",
+    "shaders",
+    "glb",
+    "gltf",
+    "blender",
+    "unreal-engine",
+    "niagara",
+    "unity",
+    "godot",
+    "gamedev"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bgbg108555/vfx3d-arsenal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bgbg108555/vfx3d-arsenal/issues"
+  },
+  "scripts": {
+    "pack-textures": "node scripts/pack-textures.mjs",
+    "prebuild": "node scripts/pack-textures.mjs",
+    "build": "node build.mjs",
+    "build:web": "node build.mjs --web dist",
+    "serve": "node scripts/serve.mjs",
+    "pretest": "node scripts/pack-textures.mjs",
+    "test": "node tests/check-fx3d.mjs && node tests/check-bow3d.mjs && node tests/check-fx-visuals.mjs",
+    "verify": "npm test && npm run build && npm run build:web",
+    "export-vfx": "node scripts/export-vfx-pipeline.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "esbuild": "^0.28.2",
+    "three": "^0.187.0"
+  }
+}

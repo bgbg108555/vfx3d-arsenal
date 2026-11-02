@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import { Sim3D, PAL3D } from '../src/core3d.js';
+import { launch3DArrow } from '../src/presets_bow.js';
+import { spawnMachShockRings3D } from '../src/fx_helpers.js';
+import { Fighter3D, DummyTarget3D } from '../src/actors3d.js';
+import { MOVES_3D } from '../src/moves3d.js';
+
+const scene = new THREE.Scene();
+const sim = new Sim3D(scene, 7);
+let impacts = 0;
+const p0 = new THREE.Vector3(0, 1, 0);
+const p1 = new THREE.Vector3(4, 2, 6);
+launch3DArrow(sim, { p0, p1, arcHeight: 0, flightTime: 0.3, heavy: true, onImpact: () => impacts++ });
+const arrow = sim.custom[0];
+sim.update(0.08);
+const axis = new THREE.Vector3(0, 1, 0).applyQuaternion(arrow.group.quaternion).normalize();
+assert.ok(axis.dot(p1.clone().sub(p0).normalize()) > 0.9999, 'arrow tip must follow flight direction while its inner model spins');
+sim.update(0.3);
+sim.update(0.2);
+assert.equal(impacts, 1, 'arrow impacts exactly once');
+assert.equal(sim.activeFxCount, 0, 'arrow and trail must expire');
+
+spawnMachShockRings3D(sim, { palette: PAL3D.windJade, duration: 0.3 });
+const pressure = sim.custom[0];
+sim.update(0.08);
+pressure.group.traverse((o) => {
+  if (!o.isMesh) return;
+  assert.ok(o.material.isShaderMaterial && o.material.uniforms.uNoise.value.isTexture, 'pressure vapor must use its textured shader');
+  assert.ok(o.material.uniforms.uOpacity.value <= 0.48, 'pressure vapor must remain translucent');
+});
+sim.update(0.3);
+assert.equal(sim.activeFxCount, 0, 'pressure wave must expire');
+
+const move = MOVES_3D.find((m) => m.id === 'bow_arrow_rain');
+const fighter = new Fighter3D(scene);
+const dummies = [new DummyTarget3D(scene, 0, 2), new DummyTarget3D(scene, -1.5, 3.5), new DummyTarget3D(scene, 1.5, 3.5)];
+move.setup(fighter, dummies, null);
+const events = move.buildEvents(sim, fighter, dummies, 7, null);
+const release = events.find((event) => event.t === 0.34);
+const skyBurst = events.find((event) => event.t === 0.56);
+const groundImpact = events.find((event) => event.t === 0.73);
+assert.ok(release && skyBurst && groundImpact, 'arrow rain must separate release, sky burst and first ground impact');
+release.run();
+assert.ok(!sim.custom.some((c) => c.group?.position.y >= 5), 'sky burst must not appear at release');
+skyBurst.run();
+assert.ok(sim.custom.some((c) => c.group?.position.y >= 5), 'sky burst must appear after the ascent');
+groundImpact.run();
+assert.ok(sim.custom.some((c) => c.group?.position.y < 0.1 && c.maxRadius), 'ground wave must appear at impact');
+console.log('PASS bow flight direction, impact, vapor lifecycle and arrow-rain timing');

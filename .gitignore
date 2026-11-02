@@ -1,0 +1,9 @@
+node_modules/
+dist/
+exports/
+tmp/
+*.log
+.DS_Store
+Thumbs.db
+src/baked_textures.js
+VFX3D-Arsenal-Showcase.html
